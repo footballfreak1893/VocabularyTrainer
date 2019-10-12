@@ -10,14 +10,15 @@ namespace VocabularyApp
         TextHandler textHandler = new TextHandler();
         public bool checkResultIsClicked = false;
         int counterQuery = 0;
+        bool isFailureList = false;
 
-
+       
+       
         public MainForm()
         {
             InitializeComponent();
 
         }
-
 
         private void Btn_translate_Click(object sender, EventArgs e)
         {
@@ -67,35 +68,37 @@ namespace VocabularyApp
             btn_translate.Visible = false;
 
             btn_checkResult.Visible = true;
-            counterQuery = AskItem(counterQuery);
+            counterQuery = AskItem(counterQuery, Data.pathAllWords);
             btn_startQuery.Visible = false;
         }
 
         private void Btn_checkResult_Click(object sender, EventArgs e)
-        {
-            var querylist = textHandler.GetQueryList(Data.pathAllWords);
-            counterQuery = GetAnswer(querylist, counterQuery);
-            counterQuery++;
-            CheckIfQueryIsDone(querylist, counterQuery);
-
+        {//Hier weiter
+            
+                var querylist = textHandler.GetQueryList(Data.pathAllWords, 1);
+                counterQuery = GetAnswer(querylist, counterQuery, Data.pathAllWords);
+                counterQuery++;
+                CheckIfQueryIsDone(querylist, counterQuery, Data.pathAllWords);
+            
         }
 
-
-        public int AskItem(int counterQuery)
+        //Korrekt
+        public int AskItem(int counterQuery, string path)
         {
-            var querylist = textHandler.GetQueryList(Data.pathAllWords);
+            
+            var querylist = textHandler.GetQueryList(path, 1);
             string item = querylist[counterQuery];
             textBox_result.Text = item;
             return counterQuery;
         }
 
-        public int GetAnswer(List<string> querylist, int counterQuery)
+        public int GetAnswer(List<string> querylist, int counterQuery, string path)
         {
             List<string> failueItems = new List<string>();
             List<string> successItems = new List<string>();
 
             var userresponse = textBox_inputText.Text;
-            var result = textHandler.CheckQuery(textBox_result.Text, userresponse);
+            var result = textHandler.CheckQuery(userresponse, counterQuery, path);
 
             if (result == false)
             {
@@ -117,15 +120,22 @@ namespace VocabularyApp
 
         }
 
-        public void CheckIfQueryIsDone(List<String> querylist, int incounterQuerydex)
+        public void CheckIfQueryIsDone(List<String> querylist, int counterQuery, string path)
         {
             counterQuery = counterQuery++;
 
             if (counterQuery >= querylist.Count)
             {
                 MessageBox.Show("query is done !!!");
-                counterQuery = 0;
+                 counterQuery = 0;
                 btn_checkResult.Visible = false;
+                btn_startQuery.Visible = true;
+                MessageBox.Show(counterQuery.ToString());
+                //Hier kommt Faillist ins spiel
+                //Evtl. eigene Methode
+                
+
+               
 
                 //show buttons for insert new vocabulary
                 btn_importExcel.Visible = true;
@@ -134,8 +144,12 @@ namespace VocabularyApp
             else
             {
 
-                counterQuery = AskItem(counterQuery);
+                counterQuery = AskItem(counterQuery, path);
             }
         }
+
+        
+
+        
     }
 }

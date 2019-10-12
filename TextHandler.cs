@@ -41,7 +41,6 @@ namespace VocabularyApp
             if (!File.Exists(Data.pathAllWords))
             {
                 File.WriteAllText(Data.pathAllWords, "beispiel, sample");
-                
             }
             
             var existingValuesStr = File.ReadAllLines(Data.pathAllWords);
@@ -95,11 +94,12 @@ namespace VocabularyApp
         //Abfragen
 
 
-        public bool CheckQuery (string queryitem, string userinput)
+        public bool CheckQuery (string userinput, int index, string path)
         {
-            //Todo: Übersetzung muss neugemacht werden
+            var answerlist = GetQueryList(path, 0);
+            var answer = answerlist[index];
            
-            if (queryitem == userinput)
+            if (answer.ToLower() == userinput.ToLower())
             {
                 userinput = null;
                 return true; 
@@ -125,7 +125,7 @@ namespace VocabularyApp
         }
 
         //Gibt zu abfragende items zurück
-        public List<string> GetQueryList(string path)
+        public List<string> GetQueryList(string path, int index)
         {
              var mergedlist = ReadList(path);
             List<string> querylist = new List<string>();
@@ -133,7 +133,7 @@ namespace VocabularyApp
             foreach (var item in mergedlist)
             {
                 var splitedvalues = item.Split(',');
-                var queryvalue = splitedvalues[1];
+                var queryvalue = splitedvalues[index];
                 querylist.Add(queryvalue);
             }
             
