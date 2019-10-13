@@ -31,7 +31,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_inputText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.btn_translate = new System.Windows.Forms.Button();
+            this.btn_save = new System.Windows.Forms.Button();
             this.textBox_result = new System.Windows.Forms.TextBox();
             this.btn_importExcel = new System.Windows.Forms.Button();
             this.lbl_originalText = new System.Windows.Forms.Label();
@@ -65,15 +65,15 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Vocabulary Quick Save";
             // 
-            // btn_translate
+            // btn_save
             // 
-            this.btn_translate.Location = new System.Drawing.Point(28, 121);
-            this.btn_translate.Name = "btn_translate";
-            this.btn_translate.Size = new System.Drawing.Size(102, 23);
-            this.btn_translate.TabIndex = 2;
-            this.btn_translate.Text = "Save";
-            this.btn_translate.UseVisualStyleBackColor = true;
-            this.btn_translate.Click += new System.EventHandler(this.Btn_translate_Click);
+            this.btn_save.Location = new System.Drawing.Point(28, 121);
+            this.btn_save.Name = "btn_save";
+            this.btn_save.Size = new System.Drawing.Size(102, 23);
+            this.btn_save.TabIndex = 2;
+            this.btn_save.Text = "Save";
+            this.btn_save.UseVisualStyleBackColor = true;
+            this.btn_save.Click += new System.EventHandler(this.Btn_translate_Click);
             // 
             // textBox_result
             // 
@@ -131,7 +131,7 @@
             this.btn_checkResult.Visible = false;
             this.btn_checkResult.Click += new System.EventHandler(this.Btn_checkResult_Click);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -142,11 +142,11 @@
             this.Controls.Add(this.lbl_originalText);
             this.Controls.Add(this.btn_importExcel);
             this.Controls.Add(this.textBox_result);
-            this.Controls.Add(this.btn_translate);
+            this.Controls.Add(this.btn_save);
             this.Controls.Add(this.textBox_inputText);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
@@ -159,7 +159,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox_inputText;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btn_translate;
+        private System.Windows.Forms.Button btn_save;
         private System.Windows.Forms.TextBox textBox_result;
         private System.Windows.Forms.Button btn_importExcel;
         private System.Windows.Forms.Label lbl_originalText;

@@ -15,8 +15,6 @@ namespace VocabularyApp
         public static string pathFailureWords = @"Data/FailureWordsList.txt";
         public static string pathSuccessWords = @"Data/SuccessWordsList.txt";
 
-
-
         public static void CreateOrLoadMainData()
         {
             if (!Directory.Exists(pathMainFolder))

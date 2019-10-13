@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Excel;
-
 
 
 namespace VocabularyApp
@@ -20,8 +14,8 @@ namespace VocabularyApp
                 translatedString = originalString;
             }
 
-            var mergedString = originalString + ","+ translatedString;
-            return mergedString ;
+            var mergedString = originalString + "," + translatedString;
+            return mergedString;
         }
 
         //Todo: Übersetzung einbauen
@@ -35,16 +29,15 @@ namespace VocabularyApp
 
         }
 
-        //Schreibt von Programmin in Gesamtliste
-        public void SaveSingleValueToTextFile (string mergedString)
+        //Schreibt von Programm in Gesamtliste
+        public void SaveSingleValueToTextFile(string mergedString)
         {
             if (!File.Exists(Data.pathAllWords))
             {
                 File.WriteAllText(Data.pathAllWords, "beispiel, sample");
             }
-            
-            var existingValuesStr = File.ReadAllLines(Data.pathAllWords);
-            var existingValues = existingValuesStr.ToList();
+
+            var existingValues = ReadList(Data.pathAllWords);
             var isDublicate = IsADublicate(mergedString, existingValues);
 
             if (isDublicate == false)
@@ -52,7 +45,7 @@ namespace VocabularyApp
                 existingValues.Add(mergedString);
             }
 
-            File.WriteAllLines(Data.pathAllWords, existingValues);
+            SaveList(Data.pathAllWords, existingValues);
         }
 
         //Schreibt von Excel in Gesamtliste
@@ -64,8 +57,7 @@ namespace VocabularyApp
 
             }
 
-            var existingValuesStr = File.ReadAllLines(Data.pathAllWords);
-            var existingValues = existingValuesStr.ToList();
+            var existingValues = ReadList(Data.pathAllWords);
 
             foreach (var excelvalue in excelvalues)
             {
@@ -76,8 +68,8 @@ namespace VocabularyApp
                     existingValues.Add(excelvalue);
                 }
             }
-            
-            File.WriteAllLines(Data.pathAllWords, existingValues);
+
+            SaveList(Data.pathAllWords, existingValues);
         }
 
         public bool IsADublicate(string value, List<string> existingvalues)
@@ -90,29 +82,9 @@ namespace VocabularyApp
             return false;
         }
 
-
-        //Abfragen
-
-
-        public bool CheckQuery (string userinput, int index, string path)
-        {
-            var answerlist = GetQueryList(path, 0);
-            var answer = answerlist[index];
-           
-            if (answer.ToLower() == userinput.ToLower())
-            {
-                userinput = null;
-                return true; 
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public List<string> ReadList(string path)
         {
-            var listarray = File.ReadAllLines(Data.pathAllWords);
+            var listarray = File.ReadAllLines(path);
             var list = listarray.ToList();
             return list;
 
@@ -124,60 +96,43 @@ namespace VocabularyApp
             File.WriteAllLines(path, list);
         }
 
-        //Gibt zu abfragende items zurück
-        public List<string> GetQueryList(string path, int index)
-        {
-             var mergedlist = ReadList(path);
-            List<string> querylist = new List<string>();
-
-            foreach (var item in mergedlist)
-            {
-                var splitedvalues = item.Split(',');
-                var queryvalue = splitedvalues[index];
-                querylist.Add(queryvalue);
-            }
-            
-            return querylist;
-        }
-
-        //Aus form class
-
-
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //    StreamWriter file = new StreamWriter(pathCSV);
-        //    file.WriteLine(stringbuilder.ToString());
-        //    file.Close();
-        //}
-
-
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 }

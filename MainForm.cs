@@ -9,15 +9,12 @@ namespace VocabularyApp
     {
         TextHandler textHandler = new TextHandler();
         public bool checkResultIsClicked = false;
-        int counterQuery = 0;
-        bool isFailureList = false;
 
-       
-       
+       QueryHandler query = new QueryHandler();
+
         public MainForm()
         {
             InitializeComponent();
-
         }
 
         private void Btn_translate_Click(object sender, EventArgs e)
@@ -30,6 +27,7 @@ namespace VocabularyApp
             textHandler.SaveSingleValueToTextFile(languagestring);
             MessageBox.Show("Vocabulary " + inputtext + " Saved");
             textBox_inputText.Clear();
+            textBox_result.Clear();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -47,7 +45,6 @@ namespace VocabularyApp
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 filepath = openFileDialog.FileName;
-
             }
 
             Excel excel = new Excel(filepath, 1);
@@ -58,98 +55,75 @@ namespace VocabularyApp
         }
 
 
-
-
         //Dient zur Abfrage, Auslagerung offen
         private void Btn_startQuery_Click(object sender, EventArgs e)
         {
-            //hide buttons for insert new vocabulary
-            btn_importExcel.Visible = false;
-            btn_translate.Visible = false;
+            textBox_result.ReadOnly = true;
+            query.counter = 0;
+            query.RetrieveItem(Data.pathAllWords, 0);
 
             btn_checkResult.Visible = true;
-            counterQuery = AskItem(counterQuery, Data.pathAllWords);
             btn_startQuery.Visible = false;
+            btn_save.Visible = false;
+            btn_importExcel.Visible = false;
+
+            MessageBox.Show("Query of List start");
+            SetTextResult(query.RetrieveItem(Data.pathAllWords, 0));
         }
 
         private void Btn_checkResult_Click(object sender, EventArgs e)
-        {//Hier weiter
-            
-                var querylist = textHandler.GetQueryList(Data.pathAllWords, 1);
-                counterQuery = GetAnswer(querylist, counterQuery, Data.pathAllWords);
-                counterQuery++;
-                CheckIfQueryIsDone(querylist, counterQuery, Data.pathAllWords);
-            
-        }
-
-        //Korrekt
-        public int AskItem(int counterQuery, string path)
         {
-            
-            var querylist = textHandler.GetQueryList(path, 1);
-            string item = querylist[counterQuery];
-            textBox_result.Text = item;
-            return counterQuery;
-        }
+             var result = query.CheckAnswer(query.counter, Data.pathAllWords, textBox_inputText.Text);
 
-        public int GetAnswer(List<string> querylist, int counterQuery, string path)
-        {
-            List<string> failueItems = new List<string>();
-            List<string> successItems = new List<string>();
-
-            var userresponse = textBox_inputText.Text;
-            var result = textHandler.CheckQuery(userresponse, counterQuery, path);
-
-            if (result == false)
-            {
-                MessageBox.Show("incorrect answer, word added to failure-list");
-                failueItems.Add(querylist[counterQuery]);
-            }
-            else
+            if (result == true)
             {
                 MessageBox.Show("correct answer, word added to success-list");
-                successItems.Add(querylist[counterQuery]);
-            }
-            textHandler.SaveList(Data.pathFailureWords, failueItems);
-            textHandler.SaveList(Data.pathSuccessWords, successItems);
-
-            textBox_inputText.Clear();
-            textBox_result.Clear();
-
-            return counterQuery;
-
-        }
-
-        public void CheckIfQueryIsDone(List<String> querylist, int counterQuery, string path)
-        {
-            counterQuery = counterQuery++;
-
-            if (counterQuery >= querylist.Count)
-            {
-                MessageBox.Show("query is done !!!");
-                 counterQuery = 0;
-                btn_checkResult.Visible = false;
-                btn_startQuery.Visible = true;
-                MessageBox.Show(counterQuery.ToString());
-                //Hier kommt Faillist ins spiel
-                //Evtl. eigene Methode
-                
-
-               
-
-                //show buttons for insert new vocabulary
-                btn_importExcel.Visible = true;
-                btn_translate.Visible = true;
             }
             else
             {
-
-                counterQuery = AskItem(counterQuery, path);
+                MessageBox.Show("incorrect answer, word added to failure-list"+Environment.NewLine+ "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
             }
+
+              query.counter += 1;
+
+            var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathAllWords);
+
+            if (isDone == true)
+            {
+                query.counter = 0;
+                MessageBox.Show("query of list is done");
+
+                btn_checkResult.Visible = false;
+                textBox_inputText.Clear();
+                textBox_result.Clear();
+                textBox_result.ReadOnly = false;
+            }
+            else
+            {
+                textBox_inputText.Clear();
+                SetTextResult(query.RetrieveItem(Data.pathAllWords, query.counter));
+            }
+
         }
 
-        
+        public void SetTextResult(string value)
+        {
+            textBox_result.Text = value;
+        }
 
-        
+        public void SetTextInput(string value)
+        {
+            textBox_inputText.Text = value;
+        }
+
+        public string GetTextResult()
+        {
+            return textBox_result.Text;
+        }
+
+        public string GetTextInput()
+        {
+            return textBox_inputText.Text; 
+        }
     }
 }
