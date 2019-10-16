@@ -25,6 +25,16 @@ namespace VocabularyApp
                 {
                     File.WriteAllText(Data.pathAllWords, "beispiel, sample");
                 }
+
+                if (!File.Exists(pathFailureWords))
+                {
+                    File.WriteAllText(Data.pathFailureWords, "beispielFail, sampleFail");
+                }
+
+                if (!File.Exists(pathSuccessWords))
+                {
+                    File.WriteAllText(Data.pathSuccessWords, "beispielSuccess, sampleSuccess");
+                }
             }
         }
     }

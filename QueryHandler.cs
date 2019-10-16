@@ -9,7 +9,8 @@ namespace VocabularyApp
     public class QueryHandler
     {
         public int counter = 0;
-        public bool isFailureList;
+        public bool isAllWordsDone = false;
+        public bool isAllFailureWordsDone = false;
 
         TextHandler textHandler = new TextHandler();
 
@@ -21,6 +22,7 @@ namespace VocabularyApp
             
         }
 
+        //Todo: Wenn AllWordsTxt bearbeitet wird, kommt exception out of range
         public List<string> GetItems(string path, bool isTranslated)
         {
             var fullList = textHandler.ReadList(path);
@@ -56,7 +58,8 @@ namespace VocabularyApp
         public bool CheckAnswer(int counter, string path, string user)
         {
             var answerlist = GetItems(path, false);
-
+            var queryList = GetItems(path, true);
+            //Gleich wie bei Faillist
             if (answerlist[counter].ToLower() == user.ToLower())
             {
                 List<string> SuccessList = new List<string>();
@@ -68,10 +71,21 @@ namespace VocabularyApp
             }
             else
             {
-                var fullList = textHandler.ReadList(Data.pathAllWords);
+                //Achtung: mergestring muss neu gebaugt werden
+                //Methode GetCorrektAnswer
+                
+                 var mergedString =textHandler.BuildLanguageString(queryList[counter], answerlist[counter]);
+
+               
                 var failList = textHandler.ReadList(Data.pathFailureWords);
-                failList.Add(fullList[counter]);
-                textHandler.SaveList(Data.pathFailureWords, failList);
+
+                if (!textHandler.IsADublicate(mergedString, failList))
+                {
+
+                    failList.Add(mergedString);
+
+                    textHandler.SaveList(Data.pathFailureWords, failList);
+                }
 
                 return false;
             }

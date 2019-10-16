@@ -58,50 +58,112 @@ namespace VocabularyApp
         //Dient zur Abfrage, Auslagerung offen
         private void Btn_startQuery_Click(object sender, EventArgs e)
         {
-            textBox_result.ReadOnly = true;
-            query.counter = 0;
-            query.RetrieveItem(Data.pathAllWords, 0);
+                textBox_result.ReadOnly = true;
+                query.counter = 0;
+                query.RetrieveItem(Data.pathAllWords, 0);
 
-            btn_checkResult.Visible = true;
-            btn_startQuery.Visible = false;
-            btn_save.Visible = false;
-            btn_importExcel.Visible = false;
+                btn_checkResult.Visible = true;
+                btn_startQuery.Visible = false;
+                btn_save.Visible = false;
+                btn_importExcel.Visible = false;
 
-            MessageBox.Show("Query of List start");
-            SetTextResult(query.RetrieveItem(Data.pathAllWords, 0));
+                MessageBox.Show("Query of List start");
+                SetTextResult(query.RetrieveItem(Data.pathAllWords, 0));
+       
         }
 
         private void Btn_checkResult_Click(object sender, EventArgs e)
         {
-             var result = query.CheckAnswer(query.counter, Data.pathAllWords, textBox_inputText.Text);
+            bool isDone = false;
 
-            if (result == true)
+            if (query.isAllWordsDone == false)
             {
-                MessageBox.Show("correct answer, word added to success-list");
+                var result = query.CheckAnswer(query.counter, Data.pathAllWords, textBox_inputText.Text);
+
+                if (result == true)
+                {
+                    MessageBox.Show("Correct answer, word added to success-list");
+                }
+                else
+                {
+                    MessageBox.Show("Incorrect answer, word added to failure-list" + Environment.NewLine + "The correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
+                }
+                query.counter += 1;
+
+                isDone = query.CheckIfQueryIsDone(query.counter, Data.pathAllWords);
+            }
+            else if (query.isAllWordsDone == true)
+            {
+                var result = query.CheckAnswer(query.counter, Data.pathFailureWords, textBox_inputText.Text);
+
+                if (result == true)
+                {
+                    MessageBox.Show("Correct answer");
+                }
+                else
+                {
+                    MessageBox.Show("Incorrect answer" + Environment.NewLine + "The correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathFailureWords));
+                }
+                query.counter += 1;
+
+                isDone = query.CheckIfQueryIsDone(query.counter, Data.pathFailureWords);
+
+                if(isDone == true)
+                {
+                    MessageBox.Show("Failure query is done");
+                    query.counter = 0;
+
+                    btn_checkResult.Visible = false;
+                    textBox_inputText.Clear();
+                    textBox_result.Clear();
+                    textBox_result.ReadOnly = false;
+                }
+
             }
             else
             {
-                MessageBox.Show("incorrect answer, word added to failure-list"+Environment.NewLine+ "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
+                MessageBox.Show("Failure query is done");
             }
 
-              query.counter += 1;
+            //Abruchbeddingung einfügen 
 
-            var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathAllWords);
+
 
             if (isDone == true)
+            //+Exist faillist + hat werte
             {
+                textBox_inputText.Clear();
+                textBox_result.Clear();
                 query.counter = 0;
                 MessageBox.Show("query of list is done");
 
-                btn_checkResult.Visible = false;
-                textBox_inputText.Clear();
-                textBox_result.Clear();
-                textBox_result.ReadOnly = false;
+
+
+                query.isAllWordsDone = true;
+                MessageBox.Show("Query of Fail-List start");
+
+                query.RetrieveItem(Data.pathFailureWords, query.counter);
+                SetTextResult(query.RetrieveItem(Data.pathFailureWords, query.counter));
+                //Abruchhbedingung muss hier her, ansonsten tritt OutOfRangeException auf
+                //Feststellung: Failure List
+
+                //btn_checkResult.Visible = false;
+                //textBox_inputText.Clear();
+                //textBox_result.Clear();
+                //textBox_result.ReadOnly = false;
             }
             else
             {
                 textBox_inputText.Clear();
-                SetTextResult(query.RetrieveItem(Data.pathAllWords, query.counter));
+                textBox_result.Clear();
+                if (!query.isAllWordsDone)
+                {
+                    SetTextResult(query.RetrieveItem(Data.pathAllWords, query.counter));
+                }
+                else
+                {
+                    SetTextResult(query.RetrieveItem(Data.pathFailureWords, query.counter));
+                }
             }
 
         }
