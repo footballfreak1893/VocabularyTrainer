@@ -7,10 +7,14 @@ namespace VocabularyApp
 {
     public partial class MainForm : Form
     {
-        TextHandler textHandler = new TextHandler();
+        
         public bool checkResultIsClicked = false;
 
        QueryHandler query = new QueryHandler();
+       VocabularyManager manager = new VocabularyManager();
+        TextHandler textHandler = new TextHandler();
+
+        public List<Vocabulary> allWords = new List<Vocabulary>();
 
         public MainForm()
         {
@@ -19,15 +23,21 @@ namespace VocabularyApp
 
         private void Btn_translate_Click(object sender, EventArgs e)
         {
-            var inputtext = textBox_inputText.Text;
-            var translatedText = textHandler.TranslateText(inputtext, textBox_result.Text);
-            var languagestring = textHandler.BuildLanguageString(inputtext, translatedText);
+            var nameGer = textBox_inputText.Text;
+            var nameEng = textBox_result.Text;
 
-            //Text wird in Liste geschrieben
-            textHandler.SaveSingleValueToTextFile(languagestring);
-            MessageBox.Show("Vocabulary " + inputtext + " Saved");
-            textBox_inputText.Clear();
-            textBox_result.Clear();
+            //var translatedText = textHandler.TranslateText(nameGer, textBox_result.Text);
+            //var languagestring = textHandler.BuildLanguageString(nameGer, translatedText);
+            ////Text wird in Liste geschrieben
+            //textHandler.SaveSingleValueToTextFile(languagestring);
+            //MessageBox.Show("Vocabulary " + nameGer + " Saved");
+            //textBox_inputText.Clear();
+            //textBox_result.Clear();
+
+            //Objekte
+            manager.CreateVocabulary(nameGer, nameEng, allWords, Data.pathAllWords);
+            MessageBox.Show("Vocabulary " + textBox_inputText.Text + " Saved");
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -77,11 +87,11 @@ namespace VocabularyApp
 
             if (result == true)
             {
-                MessageBox.Show("correct answer, word added to success-list");
+                MessageBox.Show("correct answer, word mark as succeed");
             }
             else
             {
-                MessageBox.Show("incorrect answer, word added to failure-list"+Environment.NewLine+ "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
+                MessageBox.Show("incorrect answer, word mark as failed"+Environment.NewLine+ "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
             }
 
               query.counter += 1;
@@ -97,6 +107,10 @@ namespace VocabularyApp
                 textBox_inputText.Clear();
                 textBox_result.Clear();
                 textBox_result.ReadOnly = false;
+
+                btn_startQuery.Visible = true;
+                btn_save.Visible = true;
+                btn_importExcel.Visible = true;
             }
             else
             {
@@ -125,5 +139,7 @@ namespace VocabularyApp
         {
             return textBox_inputText.Text; 
         }
+
+        
     }
 }

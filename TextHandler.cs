@@ -32,12 +32,12 @@ namespace VocabularyApp
         //Schreibt von Programm in Gesamtliste
         public void SaveSingleValueToTextFile(string mergedString)
         {
-            if (!File.Exists(Data.pathAllWords))
+            if (!File.Exists(Data.pathAllWordsTextFile))
             {
-                File.WriteAllText(Data.pathAllWords, "beispiel, sample");
+                File.WriteAllText(Data.pathAllWordsTextFile, "beispiel, sample");
             }
 
-            var existingValues = ReadList(Data.pathAllWords);
+            var existingValues = ReadList(Data.pathAllWordsTextFile);
             var isDublicate = IsADublicate(mergedString, existingValues);
 
             if (isDublicate == false)
@@ -45,19 +45,19 @@ namespace VocabularyApp
                 existingValues.Add(mergedString);
             }
 
-            SaveList(Data.pathAllWords, existingValues);
+            SaveList(Data.pathAllWordsTextFile, existingValues);
         }
 
         //Schreibt von Excel in Gesamtliste
         public void SaveExcelValuesToTextFile(List<string> excelvalues)
         {
-            if (!File.Exists(Data.pathAllWords))
+            if (!File.Exists(Data.pathAllWordsTextFile))
             {
-                File.WriteAllText(Data.pathAllWords, "beispiel, sample");
+                File.WriteAllText(Data.pathAllWordsTextFile, "beispiel, sample");
 
             }
 
-            var existingValues = ReadList(Data.pathAllWords);
+            var existingValues = ReadList(Data.pathAllWordsTextFile);
 
             foreach (var excelvalue in excelvalues)
             {
@@ -69,7 +69,7 @@ namespace VocabularyApp
                 }
             }
 
-            SaveList(Data.pathAllWords, existingValues);
+            SaveList(Data.pathAllWordsTextFile, existingValues);
         }
 
         public bool IsADublicate(string value, List<string> existingvalues)
