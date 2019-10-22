@@ -95,13 +95,15 @@ namespace VocabularyApp
             if (currentVoc.nameGer.ToLower() == userinput.ToLower())
             {
                 currentVoc.lastSuccess = DateTime.Now;
-                manager.SaveVocabulary(currentVoc, voclist, Data.pathAllWords);
+                currentVoc.isupdated = true;
+                manager.UpdateVocabulary(currentVoc, voclist, Data.pathAllWords, counter);
                 return true;
             }
             else
             {
                 currentVoc.lastFailed = DateTime.Now;
-                manager.SaveVocabulary(currentVoc, voclist, Data.pathAllWords);
+                currentVoc.isupdated = true;
+                manager.UpdateVocabulary(currentVoc, voclist, Data.pathAllWords, counter);
                 return false;
             }
         }
@@ -109,7 +111,7 @@ namespace VocabularyApp
         public string RetrieveItem(string path, int count)
         {
             voclist = manager.LoadVocabularyList(path);
-            return voclist[counter].nameEng;
+            return voclist[count].nameEng;
 
         }
 

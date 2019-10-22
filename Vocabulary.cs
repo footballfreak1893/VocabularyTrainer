@@ -19,6 +19,7 @@ namespace VocabularyApp
         public DateTime createDate;
         public DateTime lastFailed;
         public DateTime lastSuccess;
+        public bool isupdated = false;
 
         public Vocabulary(int id, string nameGer, string nameEng, DateTime createdate)
         {

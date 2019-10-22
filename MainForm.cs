@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-
+using System.IO;
 
 namespace VocabularyApp
 {
@@ -14,7 +14,8 @@ namespace VocabularyApp
        VocabularyManager manager = new VocabularyManager();
         TextHandler textHandler = new TextHandler();
 
-        public List<Vocabulary> allWords = new List<Vocabulary>();
+        List<Vocabulary> mainList = new List<Vocabulary>();
+         
 
         public MainForm()
         {
@@ -23,6 +24,7 @@ namespace VocabularyApp
 
         private void Btn_translate_Click(object sender, EventArgs e)
         {
+            var allWords = manager.LoadVocabularyList(Data.pathAllWords);
             var nameGer = textBox_inputText.Text;
             var nameEng = textBox_result.Text;
 
@@ -42,26 +44,38 @@ namespace VocabularyApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Data.CreateOrLoadMainData();
+            if (!Directory.Exists(Data.pathMainFolder))
+            {
+                Directory.CreateDirectory(Data.pathMainFolder);
+
+                if (!File.Exists(Data.pathAllWords))
+                {
+                    mainList.Add(new Vocabulary(001, "standard", "default", DateTime.Now));
+                    manager.SaveVocabularyList(Data.pathAllWords, mainList);
+                }
+            }
+            mainList = manager.LoadVocabularyList(Data.pathAllWords);
         }
 
         //Importiert Excel Values in vokabelliste
         private void Btn_ImportExcel_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = "C://";
-            openFileDialog.Filter = "excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-            string filepath = null;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                filepath = openFileDialog.FileName;
-            }
+            manager.PrintVoclist(Data.pathAllWords);
 
-            Excel excel = new Excel(filepath, 1);
-            var excelvalues = excel.GetCellValues(1, 1);
-            textHandler.SaveExcelValuesToTextFile(excelvalues);
-            excel.Close();
-            MessageBox.Show("Values from: " + filepath + " are successfully imported!");
+            //OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = "C://";
+            //openFileDialog.Filter = "excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+            //string filepath = null;
+            //if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    filepath = openFileDialog.FileName;
+            //}
+
+            //Excel excel = new Excel(filepath, 1);
+            //var excelvalues = excel.GetCellValues(1, 1);
+            //textHandler.SaveExcelValuesToTextFile(excelvalues);
+            //excel.Close();
+            //MessageBox.Show("Values from: " + filepath + " are successfully imported!");
         }
 
 

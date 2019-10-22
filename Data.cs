@@ -9,6 +9,7 @@ namespace VocabularyApp
 {
     public static class Data
     {
+        
         //paths for text/excel files
         public static string pathMainFolder = @"Data";
         //public static string pathAllWordsTextFile = @"Data/AllWordsList.txt";
@@ -42,6 +43,7 @@ namespace VocabularyApp
             
             if (!File.Exists(pathAllWords))
             {
+                //neue Voc erstellen
                 File.Create(pathAllWords);
             }
 

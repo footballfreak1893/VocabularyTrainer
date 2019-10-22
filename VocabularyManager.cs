@@ -14,22 +14,43 @@ namespace VocabularyApp
     {
         ID genID = new ID();
 
-        public void CreateVocabulary(string nameGer, string nameEng, List<Vocabulary> vocbabularyList, string path)
+        public void CreateVocabulary(string nameGer, string nameEng, List<Vocabulary> vocabularyList, string path)
         {
+            
             Vocabulary vocabulary = new Vocabulary(genID.GenerateID(genID), nameGer, nameEng, DateTime.Now);
-            SaveVocabulary(vocabulary, vocbabularyList, path);
+
+           var isDublicate = IsADublicate(vocabulary, vocabularyList);
+
+            if (!isDublicate)
+            {
+                SaveVocabulary(vocabulary, vocabularyList, path);
+            }
+            else
+            {
+                MessageBox.Show("Error: Voc " + vocabulary.nameGer + " already exists!");
+            }
         }
 
         public void SaveVocabulary(Vocabulary vocabulary, List<Vocabulary> vocbabularyList, string path)
         {
-            vocbabularyList.Add(vocabulary);
+            if(!IsADublicate(vocabulary, vocbabularyList))
+            {
+                vocbabularyList.Add(vocabulary);
+            }
             SaveVocabularyList(path, vocbabularyList);
         }
 
         //Offen
-        public void UpdateVocabulary(Vocabulary vocabulary, List<Vocabulary> vocbabularyList, string path)
+        public void UpdateVocabulary(Vocabulary vocabularyUpdate, List<Vocabulary> vocabularyList, string path, int counter)
         {
-            SaveVocabularyList(path, vocbabularyList);
+                //if(vocabularyPre.id  == vocabularyUpdate.id)
+                //{
+                    
+                vocabularyList.RemoveAt(counter);
+                vocabularyList.Insert(counter, vocabularyUpdate);
+                SaveVocabularyList(path, vocabularyList);
+                //}
+            
         }
 
         //Offen
@@ -66,13 +87,30 @@ namespace VocabularyApp
         {
             foreach (var voc in vocabularyList)
             {
-                if (voc.nameEng == vocabularyInput.nameEng && voc.nameEng == vocabularyInput.nameEng)
+                if (voc.nameEng == vocabularyInput.nameEng || voc.nameGer == vocabularyInput.nameGer)
                 {
                     return true;
                 }
 
             }
             return false;
+        }
+
+        public void PrintVoclist(string path)
+        {
+            var vocList = LoadVocabularyList(path);
+            MessageBox.Show("Number of Items:" +vocList.Count.ToString());
+            string printString = "";
+
+            foreach (var item in vocList)
+            {
+               MessageBox.Show(printString = printString + item.nameGer +item.lastFailed+ Environment.NewLine);
+            }
+        }
+
+        public DateTime FormatTimeStamp(DateTime time)
+        {
+           return time = new DateTime(time.Year, time.Month, time.Day);
         }
 
 
