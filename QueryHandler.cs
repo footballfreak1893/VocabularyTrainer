@@ -10,6 +10,7 @@ namespace VocabularyApp
     {
         public int counter = 0;
         public bool isFailureList;
+        public bool isFaillistDone = false;
 
         TextHandler textHandler = new TextHandler();
         VocabularyManager manager = new VocabularyManager();
@@ -96,14 +97,14 @@ namespace VocabularyApp
             {
                 currentVoc.lastSuccess = DateTime.Now;
                 currentVoc.isupdated = true;
-                manager.UpdateVocabulary(currentVoc, voclist, Data.pathAllWords, counter);
+                manager.UpdateVocabulary(currentVoc, voclist, path, counter);
                 return true;
             }
             else
             {
                 currentVoc.lastFailed = DateTime.Now;
                 currentVoc.isupdated = true;
-                manager.UpdateVocabulary(currentVoc, voclist, Data.pathAllWords, counter);
+                manager.UpdateVocabulary(currentVoc, voclist, path, counter);
                 return false;
             }
         }

@@ -15,7 +15,8 @@ namespace VocabularyApp
         TextHandler textHandler = new TextHandler();
 
         List<Vocabulary> mainList = new List<Vocabulary>();
-         
+        List<Vocabulary> failList = new List<Vocabulary>();
+
 
         public MainForm()
         {
@@ -53,8 +54,15 @@ namespace VocabularyApp
                     mainList.Add(new Vocabulary(001, "standard", "default", DateTime.Now));
                     manager.SaveVocabularyList(Data.pathAllWords, mainList);
                 }
+
             }
             mainList = manager.LoadVocabularyList(Data.pathAllWords);
+
+            //if (!File.Exists(Data.pathFailureWords))
+            //{
+            //    mainList.Add(new Vocabulary(001, "standardFail", "defaultFail", DateTime.Now));
+            //    manager.SaveVocabularyList(Data.pathFailureWords, failList);
+            //}
         }
 
         //Importiert Excel Values in vokabelliste
@@ -97,41 +105,108 @@ namespace VocabularyApp
 
         private void Btn_checkResult_Click(object sender, EventArgs e)
         {
-             var result = query.CheckAnswer(query.counter, Data.pathAllWords, textBox_inputText.Text);
-
-            if (result == true)
+            if (!query.isFailureList)
             {
-                MessageBox.Show("correct answer, word mark as succeed");
+                var result = query.CheckAnswer(query.counter, Data.pathAllWords, textBox_inputText.Text);
+
+                if (result == true)
+                {
+                    MessageBox.Show("correct answer, word mark as succeed");
+                }
+                else
+                {
+                    MessageBox.Show("incorrect answer, word mark as failed" + Environment.NewLine + "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
+                }
+
+                query.counter += 1;
+
+                var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathAllWords);
+
+
+                if (isDone == true)
+                {
+                    query.counter = 0;
+                    MessageBox.Show("query of list is done");
+
+                    //Failure
+                    query.isFailureList = true;
+
+                    //btn_checkResult.Visible = false;
+                    textBox_inputText.Clear();
+                    textBox_result.Clear();
+                    //textBox_result.ReadOnly = false;
+
+                    //btn_startQuery.Visible = true;
+                    //btn_save.Visible = true;
+                    //btn_importExcel.Visible = true;
+
+                    manager.GenerateFaillist(Data.pathAllWords);
+                    MessageBox.Show("Faillist is filled");
+
+                    SetTextResult(query.RetrieveItem(Data.pathFailureWords, 0));
+                }
+                else
+                {
+                    textBox_inputText.Clear();
+                    SetTextResult(query.RetrieveItem(Data.pathAllWords, query.counter));
+                }
+
             }
-            else
+
+            else if (query.isFailureList && !query.isFaillistDone)
             {
-                MessageBox.Show("incorrect answer, word mark as failed"+Environment.NewLine+ "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
+             
+
+                var result = query.CheckAnswer(query.counter, Data.pathFailureWords, textBox_inputText.Text);
+
+                if (result == true)
+                {
+                    MessageBox.Show("correct answer, word mark as succeed");
+                }
+                else
+                {
+                    MessageBox.Show("incorrect answer!" + Environment.NewLine + "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathFailureWords));
+                }
+
+                query.counter += 1;
+
+                var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathFailureWords);
+
+                if (isDone)
+                {
+                    query.counter = 0;
+                    query.isFailureList = false;
+                    query.isFaillistDone = true;
+
+                    MessageBox.Show("query of faillure items is done");
+                    btn_checkResult.Visible = false;
+                    textBox_inputText.Clear();
+                    textBox_result.Clear();
+                    textBox_result.ReadOnly = false;
+
+                    btn_startQuery.Visible = true;
+                    btn_save.Visible = true;
+                    btn_importExcel.Visible = true;
+                }
+                else
+                {
+                    textBox_inputText.Clear();
+                    SetTextResult(query.RetrieveItem(Data.pathFailureWords, query.counter));
+                }
+
             }
 
-              query.counter += 1;
+            //else
+            //{
+            //    btn_checkResult.Visible = false;
+            //    textBox_inputText.Clear();
+            //    textBox_result.Clear();
+            //    textBox_result.ReadOnly = false;
 
-            var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathAllWords);
-
-            if (isDone == true)
-            {
-                query.counter = 0;
-                MessageBox.Show("query of list is done");
-
-                btn_checkResult.Visible = false;
-                textBox_inputText.Clear();
-                textBox_result.Clear();
-                textBox_result.ReadOnly = false;
-
-                btn_startQuery.Visible = true;
-                btn_save.Visible = true;
-                btn_importExcel.Visible = true;
-            }
-            else
-            {
-                textBox_inputText.Clear();
-                SetTextResult(query.RetrieveItem(Data.pathAllWords, query.counter));
-            }
-
+            //    btn_startQuery.Visible = true;
+            //    btn_save.Visible = true;
+            //    btn_importExcel.Visible = true;
+            //}
         }
 
         public void SetTextResult(string value)

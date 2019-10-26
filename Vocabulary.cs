@@ -19,7 +19,9 @@ namespace VocabularyApp
         public DateTime createDate;
         public DateTime lastFailed;
         public DateTime lastSuccess;
+        public DateTime defaultTime = new DateTime(2000, 01, 01);
         public bool isupdated = false;
+        
 
         public Vocabulary(int id, string nameGer, string nameEng, DateTime createdate)
         {
@@ -27,6 +29,8 @@ namespace VocabularyApp
             this.nameEng = nameEng;
             this.createDate = createdate;
             this.id = id;
+            this.lastFailed = defaultTime;
+            this.lastSuccess = defaultTime;
         }
 
         public string GetName(bool eng)
@@ -39,6 +43,12 @@ namespace VocabularyApp
             {
                 return this.nameEng;
             }
+        }
+
+        public DateTime SetDefaultTime (DateTime time)
+        {
+            time = defaultTime;
+            return time;
         }
 
         

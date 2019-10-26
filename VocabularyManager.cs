@@ -43,14 +43,9 @@ namespace VocabularyApp
         //Offen
         public void UpdateVocabulary(Vocabulary vocabularyUpdate, List<Vocabulary> vocabularyList, string path, int counter)
         {
-                //if(vocabularyPre.id  == vocabularyUpdate.id)
-                //{
-                    
                 vocabularyList.RemoveAt(counter);
                 vocabularyList.Insert(counter, vocabularyUpdate);
                 SaveVocabularyList(path, vocabularyList);
-                //}
-            
         }
 
         //Offen
@@ -107,6 +102,33 @@ namespace VocabularyApp
                MessageBox.Show(printString = printString + item.nameGer +item.lastFailed+ Environment.NewLine);
             }
         }
+
+        public void GenerateFaillist(string path)
+        {
+            var vocList = LoadVocabularyList(path);
+            List<Vocabulary> failList = new List<Vocabulary>();
+
+            foreach (var item in vocList)
+            {
+                if (item.lastFailed != item.defaultTime)
+                {
+                    failList.Add(item);
+                }
+            }
+            SaveVocabularyList(Data.pathFailureWords, failList);
+
+        }
+
+        public void SetDefaultDates (string path, int counter)
+        {
+          var  voclist = LoadVocabularyList(path);
+            var currentVoc = voclist[counter];
+            currentVoc.lastFailed = currentVoc.defaultTime;
+            UpdateVocabulary(currentVoc, voclist, path, counter);
+            
+        }
+
+       
 
         public DateTime FormatTimeStamp(DateTime time)
         {
