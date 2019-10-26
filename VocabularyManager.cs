@@ -103,7 +103,7 @@ namespace VocabularyApp
             }
         }
 
-        public void GenerateFaillist(string path)
+        public List<Vocabulary> GenerateFaillist(string path)
         {
             var vocList = LoadVocabularyList(path);
             List<Vocabulary> failList = new List<Vocabulary>();
@@ -116,7 +116,7 @@ namespace VocabularyApp
                 }
             }
             SaveVocabularyList(Data.pathFailureWords, failList);
-
+            return failList;
         }
 
         public void SetDefaultDates (string path, int counter)

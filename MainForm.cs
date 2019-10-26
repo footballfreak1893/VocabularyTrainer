@@ -7,11 +7,11 @@ namespace VocabularyApp
 {
     public partial class MainForm : Form
     {
-        
+
         public bool checkResultIsClicked = false;
 
-       QueryHandler query = new QueryHandler();
-       VocabularyManager manager = new VocabularyManager();
+        QueryHandler query = new QueryHandler();
+        VocabularyManager manager = new VocabularyManager();
         TextHandler textHandler = new TextHandler();
 
         List<Vocabulary> mainList = new List<Vocabulary>();
@@ -107,106 +107,74 @@ namespace VocabularyApp
         {
             if (!query.isFailureList)
             {
-                var result = query.CheckAnswer(query.counter, Data.pathAllWords, textBox_inputText.Text);
-
-                if (result == true)
-                {
-                    MessageBox.Show("correct answer, word mark as succeed");
-                }
-                else
-                {
-                    MessageBox.Show("incorrect answer, word mark as failed" + Environment.NewLine + "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
-                }
-
-                query.counter += 1;
-
-                var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathAllWords);
-
-
-                if (isDone == true)
-                {
-                    query.counter = 0;
-                    MessageBox.Show("query of list is done");
-
-                    //Failure
-                    query.isFailureList = true;
-
-                    //btn_checkResult.Visible = false;
-                    textBox_inputText.Clear();
-                    textBox_result.Clear();
-                    //textBox_result.ReadOnly = false;
-
-                    //btn_startQuery.Visible = true;
-                    //btn_save.Visible = true;
-                    //btn_importExcel.Visible = true;
-
-                    manager.GenerateFaillist(Data.pathAllWords);
-                    MessageBox.Show("Faillist is filled");
-
-                    SetTextResult(query.RetrieveItem(Data.pathFailureWords, 0));
-                }
-                else
-                {
-                    textBox_inputText.Clear();
-                    SetTextResult(query.RetrieveItem(Data.pathAllWords, query.counter));
-                }
-
+                QueryMainList(Data.pathAllWords, query, query.isFailureList);
             }
 
-            else if (query.isFailureList && !query.isFaillistDone)
+            else
             {
-             
+                QueryMainList(Data.pathFailureWords, query, query.isFailureList);
+            }
 
-                var result = query.CheckAnswer(query.counter, Data.pathFailureWords, textBox_inputText.Text);
+        }
 
-                if (result == true)
+        public void QueryMainList(string path, QueryHandler query, bool isFaillist)
+        {
+            SetTextResult(query.RetrieveItem(path, query.counter));
+            var result = query.CheckAnswer(query.counter, path, textBox_inputText.Text);
+
+            if (result == true)
+            {
+                MessageBox.Show("correct answer, word mark as succeed");
+            }
+            else
+            {
+                MessageBox.Show("incorrect answer, word mark as failed" + Environment.NewLine + "the correct answer is: " + query.GetCorrectAnswer(query.counter, path));
+            }
+
+            query.counter += 1;
+
+            if (query.CheckIfQueryIsDone(query.counter, path))
+            {
+                query.counter = 0;
+                MessageBox.Show("query of list is done");
+
+                textBox_inputText.Clear();
+                textBox_result.Clear();
+
+                if (isFaillist)
                 {
-                    MessageBox.Show("correct answer, word mark as succeed");
-                }
-                else
-                {
-                    MessageBox.Show("incorrect answer!" + Environment.NewLine + "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathFailureWords));
-                }
+                    MessageBox.Show("query of  fail list is done");
 
-                query.counter += 1;
-
-                var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathFailureWords);
-
-                if (isDone)
-                {
-                    query.counter = 0;
-                    query.isFailureList = false;
-                    query.isFaillistDone = true;
-
-                    MessageBox.Show("query of faillure items is done");
                     btn_checkResult.Visible = false;
-                    textBox_inputText.Clear();
-                    textBox_result.Clear();
                     textBox_result.ReadOnly = false;
-
                     btn_startQuery.Visible = true;
                     btn_save.Visible = true;
                     btn_importExcel.Visible = true;
+
+                    query.isFailureList = false;
                 }
+
                 else
                 {
-                    textBox_inputText.Clear();
-                    SetTextResult(query.RetrieveItem(Data.pathFailureWords, query.counter));
+
+                    var faillist = manager.GenerateFaillist(Data.pathAllWords);
+                    if (faillist.Count == 0)
+                    {
+                        return;
+                    }
+
+
+                    SetTextResult(query.RetrieveItem(Data.pathFailureWords, 0));
+
+                    query.isFailureList = true;
                 }
 
             }
-
-            //else
-            //{
-            //    btn_checkResult.Visible = false;
-            //    textBox_inputText.Clear();
-            //    textBox_result.Clear();
-            //    textBox_result.ReadOnly = false;
-
-            //    btn_startQuery.Visible = true;
-            //    btn_save.Visible = true;
-            //    btn_importExcel.Visible = true;
-            //}
+            else
+            {
+                textBox_inputText.Clear();
+                SetTextResult(query.RetrieveItem(path, query.counter));
+            }
         }
 
         public void SetTextResult(string value)
@@ -226,9 +194,9 @@ namespace VocabularyApp
 
         public string GetTextInput()
         {
-            return textBox_inputText.Text; 
+            return textBox_inputText.Text;
         }
 
-        
+
     }
 }

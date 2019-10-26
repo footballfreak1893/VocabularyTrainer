@@ -17,75 +17,11 @@ namespace VocabularyApp
 
         List<Vocabulary> voclist = new List<Vocabulary>();
 
-        //public List<string> StartQuery(string path)
-        //{
-        //    this.counter = 0;
-
-        //    return GetItems(path, true);
+        public QueryHandler()
+        {
             
-        //}
+        }
 
-        //public List<string> GetItems(string path, bool isTranslated)
-        //{
-        //    var fullList = textHandler.ReadList(path);
-        //    List<string> itemList = new List<string>();
-            
-        //    foreach (var item in fullList)
-        //    {
-        //        var itemArray = item.Split(',');
-
-        //        if (isTranslated == true )
-        //        {
-        //            itemList.Add(itemArray[1]);
-        //        }
-
-        //        else
-        //        {
-        //            itemList.Add(itemArray[0]);
-        //        }
-        //    }
-
-        //    return itemList;
-        //}
-
-        //Aktuell kann nur eine Sprache abgefragt werden
-        //public string RetrieveItem(string path, int count)
-        //{
-        //    voclist = manager.LoadVocabularyList(path);
-        //    return voclist[counter].nameEng;
-
-        //}
-
-        //public bool CheckAnswer(int counter, string path, string user)
-        //{
-        //    var answerlist = GetItems(path, false);
-
-        //    if (answerlist[counter].ToLower() == userinput.ToLower())
-        //    {
-        //        List<string> SuccessList = new List<string>();
-
-        //        SuccessList.Add(answerlist[counter]);
-        //        textHandler.SaveList(Data.pathSuccessWordsTextFile, SuccessList);
-
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        var fullList = textHandler.ReadList(Data.pathAllWordsTextFile);
-        //        var failList = textHandler.ReadList(Data.pathFailureWordsTextFile);
-        //        failList.Add(fullList[counter]);
-        //        textHandler.SaveList(Data.pathFailureWordsTextFile, failList);
-
-        //        return false;
-        //    }
-        //}
-
-
-        
-       
-
-
-        //New
         //Testen
         //Abfrage funktioniert nur von eng nach ger
         public bool CheckAnswer(int counter, string path, string userinput)
@@ -136,5 +72,52 @@ namespace VocabularyApp
                 return false;
             }
         }
+
+        //public void RetriveList(string path)
+        //{
+        //    var result = this.CheckAnswer(this.counter, path, form.GetTextInput());
+
+        //    if (result == true)
+        //    {
+        //        MessageBox.Show("correct answer, word mark as succeed");
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("incorrect answer, word mark as failed" + Environment.NewLine + "the correct answer is: " + query.GetCorrectAnswer(query.counter, Data.pathAllWords));
+        //    }
+
+        //    query.counter += 1;
+
+        //    var isDone = query.CheckIfQueryIsDone(query.counter, Data.pathAllWords);
+
+
+        //    if (isDone == true)
+        //    {
+        //        query.counter = 0;
+        //        MessageBox.Show("query of list is done");
+
+        //        //Failure
+        //        query.isFailureList = true;
+
+        //        //btn_checkResult.Visible = false;
+        //        textBox_inputText.Clear();
+        //        textBox_result.Clear();
+        //        //textBox_result.ReadOnly = false;
+
+        //        //btn_startQuery.Visible = true;
+        //        //btn_save.Visible = true;
+        //        //btn_importExcel.Visible = true;
+
+        //        manager.GenerateFaillist(Data.pathAllWords);
+        //        MessageBox.Show("Faillist is filled");
+
+        //        SetTextResult(query.RetrieveItem(Data.pathFailureWords, 0));
+        //    }
+        //    else
+        //    {
+        //        textBox_inputText.Clear();
+        //        SetTextResult(query.RetrieveItem(Data.pathAllWords, query.counter));
+        //    }
+        //}
     }
 }
