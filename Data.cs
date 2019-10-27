@@ -9,7 +9,6 @@ namespace VocabularyApp
 {
     public static class Data
     {
-        
         //paths for text/excel files
         public static string pathMainFolder = @"Data";
         public static string pathOutputExcel = @"Data/ExcelList.xlsx";
@@ -18,7 +17,5 @@ namespace VocabularyApp
         public static string pathFailureWords = @"Data/FailureWordsList";
 
         public static string pathAllWordsTextFile = @"Data/AllWordsList.txt";
-
-
     }
 }

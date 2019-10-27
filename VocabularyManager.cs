@@ -78,6 +78,7 @@ namespace VocabularyApp
         }
 
         //Weitere Überprüfungen einbauen
+        //Zahlen nicht zulassen
         public bool IsADublicate( Vocabulary vocabularyInput, List<Vocabulary> vocabularyList)
         {
             foreach (var voc in vocabularyList)
@@ -108,15 +109,24 @@ namespace VocabularyApp
             var vocList = LoadVocabularyList(path);
             List<Vocabulary> failList = new List<Vocabulary>();
 
+            var now = DateTime.Now;
+           
             foreach (var item in vocList)
             {
-                if (item.lastFailed != item.defaultTime)
+                var timeDifference = (now - item.lastFailed).TotalMinutes;
+
+                if (timeDifference <= 5)
                 {
                     failList.Add(item);
                 }
             }
             SaveVocabularyList(Data.pathFailureWords, failList);
             return failList;
+        }
+
+        public void DeleteFaillist()
+        {
+            File.Delete(Data.pathFailureWords);
         }
 
         public void SetDefaultDates (string path, int counter)
@@ -127,16 +137,6 @@ namespace VocabularyApp
             UpdateVocabulary(currentVoc, voclist, path, counter);
             
         }
-
-       
-
-        public DateTime FormatTimeStamp(DateTime time)
-        {
-           return time = new DateTime(time.Year, time.Month, time.Day);
-        }
-
-
-
-
+               
     }
 }

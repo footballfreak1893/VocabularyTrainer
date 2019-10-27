@@ -8,6 +8,8 @@ namespace VocabularyApp
 {
     class Excel
     {
+        VocabularyManager manager = new VocabularyManager();
+
         _Application excel = new Application();
         Workbook wb;
         Worksheet ws;
@@ -45,26 +47,29 @@ namespace VocabularyApp
         }
 
         //Liest Alle Werte aus Excel und schreibt sie Kommaseperat aus den ersten 2 spalten auf
-        public List<string> GetCellValues(int x, int y)
+        public void CreateVoc(int x, int y)
         {
-            List<string> cellvalues = new List<string>();
+            var vocList = manager.LoadVocabularyList(Data.pathAllWords);
+
             while (ws.Cells[x,y].Value2 != null)
             {
-                cellvalues.Add(MergeCellValues(x, y));
+                var nameGer = ws.Cells[x, y].Value2;
+                var nameEng = ws.Cells[x, y + 1].Value2;
+
+                manager.CreateVocabulary(nameGer, nameEng, vocList, Data.pathAllWords);
                 x++;
             }
-            return cellvalues;
         }
 
         //Fügt zwei zellenwerte zu einem (Komma seperat) zusammen 
-        public string MergeCellValues(int x, int y)
-        {
-            var firstVal = ws.Cells[x, y].Value2;
-            var secondVal = ws.Cells[x, y + 1].Value2;
+        //public string MergeCellValues(int x, int y)
+        //{
+        //    var nameGer = ws.Cells[x, y].Value2;
+        //    var nameEng = ws.Cells[x, y + 1].Value2;
 
-            return firstVal + "," + secondVal;
+        //    return nameGer + "," + nameEng;
 
-        }
+        //}
 
         //Schreibt Listwerte in Excel
         //!!!Funktioniert noch nicht

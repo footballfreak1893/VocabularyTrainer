@@ -7,14 +7,12 @@ namespace VocabularyApp
 {
     public class TextHandler
     {
-        public string BuildLanguageString(string originalString, string translatedString)
-        {
-            if (translatedString == null || translatedString == "")
-            {
-                translatedString = originalString;
-            }
+        VocabularyManager manager = new VocabularyManager();
 
-            var mergedString = originalString + "," + translatedString;
+        public string BuildVocString(Vocabulary vocabulary)
+        {
+            string mergedString = vocabulary.id + ", " + vocabulary.nameGer + ", " + vocabulary.nameEng + ", " + vocabulary.lastFailed + ", " + vocabulary.lastSuccess;
+                      
             return mergedString;
         }
 
@@ -30,22 +28,23 @@ namespace VocabularyApp
         }
 
         //Schreibt von Programm in Gesamtliste
-        public void SaveSingleValueToTextFile(string mergedString)
+        public void PrintValuesToTextFile(string path)
         {
-            if (!File.Exists(Data.pathAllWordsTextFile))
+            if (File.Exists(Data.pathAllWordsTextFile))
             {
-                File.WriteAllText(Data.pathAllWordsTextFile, "beispiel, sample");
+                File.Delete(Data.pathAllWordsTextFile);
             }
 
-            var existingValues = ReadList(Data.pathAllWordsTextFile);
-            var isDublicate = IsADublicate(mergedString, existingValues);
+            var vocList = manager.LoadVocabularyList(path);
 
-            if (isDublicate == false)
+          
+            StreamWriter writer = new StreamWriter(Data.pathAllWordsTextFile);
+            foreach (var item in vocList)
             {
-                existingValues.Add(mergedString);
+                writer.WriteLine(BuildVocString(item));
             }
 
-            SaveList(Data.pathAllWordsTextFile, existingValues);
+            writer.Close();
         }
 
         //Schreibt von Excel in Gesamtliste
