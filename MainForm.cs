@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
+using System.Data;
 
 namespace VocabularyApp
 {
@@ -43,17 +44,31 @@ namespace VocabularyApp
                 {
                     mainList.Add(new Vocabulary(001, "standard", "default", DateTime.Now));
                     manager.SaveVocabularyList(Data.pathAllWords, mainList);
+                    
                 }
 
             }
             mainList = manager.LoadVocabularyList(Data.pathAllWords);
+
+            GenerateTable();
+
+           
         }
 
         //Importiert Excel Values in vokabelliste
         private void Btn_ImportExcel_Click(object sender, EventArgs e)
         {
+            //GenerateTable();
+            //textHandler.PrintValuesToTextFile(Data.pathAllWords);
+
+            //manager.PrintVoclist(Data.pathAllWords);
+            //manager.ClearList(Data.pathAllWords);
             textHandler.PrintValuesToTextFile(Data.pathAllWords);
-            manager.PrintVoclist(Data.pathAllWords);
+            GenerateTable();
+           var randomList = query.GetRandomItem(Data.pathAllWords);
+            textHandler.PrintVoclist(randomList);
+           
+
 
             //OpenFileDialog openFileDialog = new OpenFileDialog();
             //openFileDialog.InitialDirectory = "C://";
@@ -105,7 +120,7 @@ namespace VocabularyApp
         {
             SetTextResult(query.RetrieveItem(path, query.counter));
             var result = query.CheckAnswer(query.counter, path, textBox_inputText.Text);
-
+            GenerateTable();
             if (result == true)
             {
                 MessageBox.Show("correct answer, word mark as succeed");
@@ -191,5 +206,23 @@ namespace VocabularyApp
             return textBox_inputText.Text;
         }
 
+        public void GenerateTable()
+        {
+            var voclist = manager.LoadVocabularyList(Data.pathAllWords);
+            dataGrid_allVocs.DataSource = voclist;
+
+            DataTable table = new DataTable("allVocs");
+            table.Columns.Add("ID", typeof(int));
+            table.Columns.Add("German", typeof(string));
+            table.Columns.Add("English", typeof(string));
+            table.Columns.Add("Last failed", typeof(DateTime));
+            table.Columns.Add("Last success", typeof(DateTime));
+
+            foreach (var item in voclist)
+            {
+                table.Rows.Add(item.id, item.nameGer, item.nameEng, item.lastFailed, item.lastSuccess);
+            }
+            dataGrid_allVocs.DataSource = table;
+        }
     }
 }

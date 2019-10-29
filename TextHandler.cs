@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 
 namespace VocabularyApp
@@ -27,7 +29,7 @@ namespace VocabularyApp
 
         }
 
-        //Schreibt von Programm in Gesamtliste
+        //Todo: Einbauen
         public void PrintValuesToTextFile(string path)
         {
             if (File.Exists(Data.pathAllWordsTextFile))
@@ -47,6 +49,35 @@ namespace VocabularyApp
             writer.Close();
         }
 
+        public void PrintVoclist(string path)
+        {
+            var vocList = manager.LoadVocabularyList(path);
+            MessageBox.Show("Number of Items:" + vocList.Count.ToString());
+            string printString = "";
+
+            foreach (var item in vocList)
+            {
+                MessageBox.Show(printString = printString + item.nameGer + item.lastFailed + Environment.NewLine);
+            }
+        }
+
+        public void PrintVoclist(List<Vocabulary> vocList)
+        {
+            MessageBox.Show("Number of Items:" + vocList.Count.ToString());
+            string printString = "";
+
+            foreach (var item in vocList)
+            {
+                MessageBox.Show(printString = printString + item.nameGer + item.lastFailed + Environment.NewLine);
+            }
+        }
+
+
+
+        //--> Veraltet
+
+
+        //Offen
         //Schreibt von Excel in Gesamtliste
         public void SaveExcelValuesToTextFile(List<string> excelvalues)
         {
@@ -95,43 +126,8 @@ namespace VocabularyApp
             File.WriteAllLines(path, list);
         }
 
+
+     
+
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 }

@@ -33,14 +33,14 @@ namespace VocabularyApp
             {
                 currentVoc.lastSuccess = DateTime.Now;
                 currentVoc.isupdated = true;
-                manager.UpdateVocabulary(currentVoc, voclist, path, counter);
+                manager.UpdateVocabulary(currentVoc, voclist, path);
                 return true;
             }
             else
             {
                 currentVoc.lastFailed = DateTime.Now;
                 currentVoc.isupdated = true;
-                manager.UpdateVocabulary(currentVoc, voclist, path, counter);
+                manager.UpdateVocabulary(currentVoc, voclist, path);
                 return false;
             }
         }
@@ -50,6 +50,34 @@ namespace VocabularyApp
             voclist = manager.LoadVocabularyList(path);
             return voclist[count].nameEng;
 
+        }
+
+        ////Funktioniert, kann eingebaut werden
+        public List<Vocabulary> GetRandomItem(string path)
+        {
+            var vocList = manager.LoadVocabularyList(path);
+            List<Vocabulary> randomList = new List<Vocabulary>();
+            var random = new Random();
+            Vocabulary voc = null;
+
+            while(randomList.Count != vocList.Count ||  randomList.Contains(voc))
+            {
+                var index = random.Next(vocList.Count);
+                voc = vocList[index];
+
+                if (randomList.Contains(voc))
+                {
+                    continue;
+                }
+
+                randomList.Add(voc);
+
+                if (randomList.Count == vocList.Count)
+                {
+                    break;
+                }
+            }
+            return randomList;
         }
 
         public string GetCorrectAnswer(int counter, string path)

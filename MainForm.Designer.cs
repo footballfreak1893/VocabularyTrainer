@@ -38,6 +38,9 @@
             this.lbl_TranslatedText = new System.Windows.Forms.Label();
             this.btn_startQuery = new System.Windows.Forms.Button();
             this.btn_checkResult = new System.Windows.Forms.Button();
+            this.dataGrid_allVocs = new System.Windows.Forms.DataGridView();
+            this.txt_test = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_allVocs)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -131,11 +134,30 @@
             this.btn_checkResult.Visible = false;
             this.btn_checkResult.Click += new System.EventHandler(this.Btn_checkResult_Click);
             // 
+            // dataGrid_allVocs
+            // 
+            this.dataGrid_allVocs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGrid_allVocs.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGrid_allVocs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid_allVocs.Location = new System.Drawing.Point(28, 245);
+            this.dataGrid_allVocs.Name = "dataGrid_allVocs";
+            this.dataGrid_allVocs.Size = new System.Drawing.Size(448, 200);
+            this.dataGrid_allVocs.TabIndex = 10;
+            // 
+            // txt_test
+            // 
+            this.txt_test.Location = new System.Drawing.Point(333, 179);
+            this.txt_test.Name = "txt_test";
+            this.txt_test.Size = new System.Drawing.Size(143, 20);
+            this.txt_test.TabIndex = 11;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(419, 297);
+            this.ClientSize = new System.Drawing.Size(600, 800);
+            this.Controls.Add(this.txt_test);
+            this.Controls.Add(this.dataGrid_allVocs);
             this.Controls.Add(this.btn_checkResult);
             this.Controls.Add(this.btn_startQuery);
             this.Controls.Add(this.lbl_TranslatedText);
@@ -149,6 +171,7 @@
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_allVocs)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -166,6 +189,8 @@
         private System.Windows.Forms.Label lbl_TranslatedText;
         private System.Windows.Forms.Button btn_startQuery;
         private System.Windows.Forms.Button btn_checkResult;
+        private System.Windows.Forms.DataGridView dataGrid_allVocs;
+        private System.Windows.Forms.TextBox txt_test;
     }
 }
 

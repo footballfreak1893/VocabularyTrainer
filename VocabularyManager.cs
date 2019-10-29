@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
@@ -10,16 +8,16 @@ using System.Windows.Forms;
 
 namespace VocabularyApp
 {
-   public class VocabularyManager
+    public class VocabularyManager
     {
         ID genID = new ID();
 
         public void CreateVocabulary(string nameGer, string nameEng, List<Vocabulary> vocabularyList, string path)
         {
-            
+
             Vocabulary vocabulary = new Vocabulary(genID.GenerateID(genID), nameGer, nameEng, DateTime.Now);
 
-           var isDublicate = IsADublicate(vocabulary, vocabularyList);
+            var isDublicate = IsADublicate(vocabulary, vocabularyList);
 
             if (!isDublicate)
             {
@@ -29,23 +27,30 @@ namespace VocabularyApp
             {
                 MessageBox.Show("Error: Voc " + vocabulary.nameGer + " already exists!");
             }
+
+
         }
 
         public void SaveVocabulary(Vocabulary vocabulary, List<Vocabulary> vocbabularyList, string path)
         {
-            if(!IsADublicate(vocabulary, vocbabularyList))
+            if (!IsADublicate(vocabulary, vocbabularyList))
             {
                 vocbabularyList.Add(vocabulary);
             }
             SaveVocabularyList(path, vocbabularyList);
         }
 
-        //Offen
-        public void UpdateVocabulary(Vocabulary vocabularyUpdate, List<Vocabulary> vocabularyList, string path, int counter)
+        
+       
+
+        public void UpdateVocabulary(Vocabulary vocabularyUpdate, List<Vocabulary> vocabularyList, string path)
         {
-                vocabularyList.RemoveAt(counter);
-                vocabularyList.Insert(counter, vocabularyUpdate);
-                SaveVocabularyList(path, vocabularyList);
+            var voc = vocabularyList.FirstOrDefault(v => v.id == vocabularyUpdate.id);
+            if (voc != null)
+            {
+                voc = vocabularyUpdate;
+            }
+            SaveVocabularyList(path, vocabularyList);
         }
 
         //Offen
@@ -79,7 +84,7 @@ namespace VocabularyApp
 
         //Weitere Überprüfungen einbauen
         //Zahlen nicht zulassen
-        public bool IsADublicate( Vocabulary vocabularyInput, List<Vocabulary> vocabularyList)
+        public bool IsADublicate(Vocabulary vocabularyInput, List<Vocabulary> vocabularyList)
         {
             foreach (var voc in vocabularyList)
             {
@@ -92,17 +97,7 @@ namespace VocabularyApp
             return false;
         }
 
-        public void PrintVoclist(string path)
-        {
-            var vocList = LoadVocabularyList(path);
-            MessageBox.Show("Number of Items:" +vocList.Count.ToString());
-            string printString = "";
-
-            foreach (var item in vocList)
-            {
-               MessageBox.Show(printString = printString + item.nameGer +item.lastFailed+ Environment.NewLine);
-            }
-        }
+     
 
         public List<Vocabulary> GenerateFaillist(string path)
         {
@@ -110,7 +105,7 @@ namespace VocabularyApp
             List<Vocabulary> failList = new List<Vocabulary>();
 
             var now = DateTime.Now;
-           
+
             foreach (var item in vocList)
             {
                 var timeDifference = (now - item.lastFailed).TotalMinutes;
@@ -129,14 +124,49 @@ namespace VocabularyApp
             File.Delete(Data.pathFailureWords);
         }
 
-        public void SetDefaultDates (string path, int counter)
+        public void SetDefaultDates(string path, int counter)
         {
-          var  voclist = LoadVocabularyList(path);
+            var voclist = LoadVocabularyList(path);
             var currentVoc = voclist[counter];
             currentVoc.lastFailed = currentVoc.defaultTime;
-            UpdateVocabulary(currentVoc, voclist, path, counter);
-            
+            UpdateVocabulary(currentVoc, voclist, path);
+
         }
-               
+
+
+
+        //Nützliche funktionen 
+        
+        public void ClearList(string path)
+        {
+            var vocList = LoadVocabularyList(path);
+            vocList.Clear();
+            vocList.Add(new Vocabulary(0001, "standard", "default", DateTime.Now));
+
+            SaveVocabularyList(path, vocList);
+        }
+
+        //Funktioniert, kann eingebaut werden
+        public Vocabulary SearchingVocs(string path, int id)
+        {
+            var vocList = LoadVocabularyList(path);
+
+            var voc = vocList.Where(x => x.id == id);
+
+            var currentVoc = voc.ToList();
+
+            if (currentVoc.Count == 1)
+            {
+                return currentVoc[0];
+            }
+
+            else
+            {
+                MessageBox.Show("Voc not found");
+                return null;
+            }
+
+
+        }
     }
 }
