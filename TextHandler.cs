@@ -72,8 +72,6 @@ namespace VocabularyApp
             }
         }
 
-
-
         //--> Veraltet
 
 
@@ -126,8 +124,6 @@ namespace VocabularyApp
             File.WriteAllLines(path, list);
         }
 
-
-     
 
     }
 }

@@ -5,16 +5,22 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
+using System.Data;
 
 namespace VocabularyApp
 {
     public class VocabularyManager
     {
-        ID genID = new ID();
+
+        public VocabularyManager()
+        {
+
+        }
+
 
         public void CreateVocabulary(string nameGer, string nameEng, List<Vocabulary> vocabularyList, string path)
         {
-
+            ID genID = new ID();
             Vocabulary vocabulary = new Vocabulary(genID.GenerateID(genID), nameGer, nameEng, DateTime.Now);
 
             var isDublicate = IsADublicate(vocabulary, vocabularyList);
@@ -27,8 +33,6 @@ namespace VocabularyApp
             {
                 MessageBox.Show("Error: Voc " + vocabulary.nameGer + " already exists!");
             }
-
-
         }
 
         public void SaveVocabulary(Vocabulary vocabulary, List<Vocabulary> vocbabularyList, string path)
@@ -40,8 +44,6 @@ namespace VocabularyApp
             SaveVocabularyList(path, vocbabularyList);
         }
 
-        
-       
 
         public void UpdateVocabulary(Vocabulary vocabularyUpdate, List<Vocabulary> vocabularyList, string path)
         {
@@ -51,6 +53,7 @@ namespace VocabularyApp
                 voc = vocabularyUpdate;
             }
             SaveVocabularyList(path, vocabularyList);
+
         }
 
         //Offen
@@ -70,6 +73,7 @@ namespace VocabularyApp
             bf.Serialize(fs, vocbabularyList);
 
             fs.Close();
+            //an der stelle muss table neu generiert werden
         }
 
         public List<Vocabulary> LoadVocabularyList(string path)
@@ -97,7 +101,7 @@ namespace VocabularyApp
             return false;
         }
 
-     
+
 
         public List<Vocabulary> GenerateFaillist(string path)
         {
@@ -136,7 +140,7 @@ namespace VocabularyApp
 
 
         //Nützliche funktionen 
-        
+
         public void ClearList(string path)
         {
             var vocList = LoadVocabularyList(path);
@@ -168,5 +172,35 @@ namespace VocabularyApp
 
 
         }
+
+        ////Funktioniert, kann eingebaut werden
+        public List<Vocabulary> GetRandomItem(string path)
+        {
+            var vocList = LoadVocabularyList(path);
+            List<Vocabulary> randomList = new List<Vocabulary>();
+            var random = new Random();
+            Vocabulary voc = null;
+
+            while (randomList.Count != vocList.Count || randomList.Contains(voc))
+            {
+                var index = random.Next(vocList.Count);
+                voc = vocList[index];
+
+                if (randomList.Contains(voc))
+                {
+                    continue;
+                }
+
+                randomList.Add(voc);
+
+                if (randomList.Count == vocList.Count)
+                {
+                    break;
+                }
+            }
+            SaveVocabularyList(Data.pathRandomWords, randomList);
+            return randomList;
+        }
+
     }
 }

@@ -40,6 +40,7 @@
             this.btn_checkResult = new System.Windows.Forms.Button();
             this.dataGrid_allVocs = new System.Windows.Forms.DataGridView();
             this.txt_test = new System.Windows.Forms.TextBox();
+            this.btn_test = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_allVocs)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,7 +77,7 @@
             this.btn_save.TabIndex = 2;
             this.btn_save.Text = "Save";
             this.btn_save.UseVisualStyleBackColor = true;
-            this.btn_save.Click += new System.EventHandler(this.Btn_translate_Click);
+            this.btn_save.Click += new System.EventHandler(this.Btn_save_Click);
             // 
             // textBox_result
             // 
@@ -151,11 +152,22 @@
             this.txt_test.Size = new System.Drawing.Size(143, 20);
             this.txt_test.TabIndex = 11;
             // 
+            // btn_test
+            // 
+            this.btn_test.Location = new System.Drawing.Point(344, 149);
+            this.btn_test.Name = "btn_test";
+            this.btn_test.Size = new System.Drawing.Size(132, 23);
+            this.btn_test.TabIndex = 12;
+            this.btn_test.Text = "Test";
+            this.btn_test.UseVisualStyleBackColor = true;
+            this.btn_test.Click += new System.EventHandler(this.Btn_test_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 800);
+            this.Controls.Add(this.btn_test);
             this.Controls.Add(this.txt_test);
             this.Controls.Add(this.dataGrid_allVocs);
             this.Controls.Add(this.btn_checkResult);
@@ -180,7 +192,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox_inputText;
+        public System.Windows.Forms.TextBox textBox_inputText;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btn_save;
         private System.Windows.Forms.TextBox textBox_result;
@@ -189,8 +201,9 @@
         private System.Windows.Forms.Label lbl_TranslatedText;
         private System.Windows.Forms.Button btn_startQuery;
         private System.Windows.Forms.Button btn_checkResult;
-        private System.Windows.Forms.DataGridView dataGrid_allVocs;
+        public System.Windows.Forms.DataGridView dataGrid_allVocs;
         private System.Windows.Forms.TextBox txt_test;
+        private System.Windows.Forms.Button btn_test;
     }
 }
 

@@ -7,7 +7,7 @@ using System.IO;
 
 namespace VocabularyApp
 {
-    public static class Data
+    public class Data
     {
         //paths for text/excel files
         public static string pathMainFolder = @"Data";
@@ -15,7 +15,10 @@ namespace VocabularyApp
         public static string pathAllWords = @"Data/AllWordsList";
         public static string pathAllWordsID = @"Data/AllWordsIDList";
         public static string pathFailureWords = @"Data/FailureWordsList";
+        public static string pathRandomWords = @"Data/RandomWordsList";
+
 
         public static string pathAllWordsTextFile = @"Data/AllWordsList.txt";
+
     }
 }
