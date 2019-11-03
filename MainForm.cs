@@ -9,7 +9,7 @@ namespace VocabularyApp
     public partial class MainForm : Form
     {
         QueryHandler query = new QueryHandler();
-        VocabularyManager manager = new VocabularyManager();
+        VocabularyManager manager;
         TextHandler textHandler = new TextHandler();
 
         List<Vocabulary> mainList = new List<Vocabulary>();
@@ -20,7 +20,29 @@ namespace VocabularyApp
             InitializeComponent();
         }
 
-        private void Btn_translate_Click(object sender, EventArgs e)
+        //Load Event
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            manager = new VocabularyManager();
+            if (!Directory.Exists(Data.pathMainFolder))
+            {
+                Directory.CreateDirectory(Data.pathMainFolder);
+
+                if (!File.Exists(Data.pathAllWords))
+                {
+                    mainList.Add(new Vocabulary(001, "standard", "default", DateTime.Now));
+                    manager.SaveVocabularyList(Data.pathAllWords, mainList);
+                }
+            }
+
+            mainList = manager.LoadVocabularyList(Data.pathAllWords);
+            GenerateTable();
+        }
+
+
+
+        //Button events
+        private void Btn_save_Click(object sender, EventArgs e)
         {
             var allWords = manager.LoadVocabularyList(Data.pathAllWords);
             var nameGer = textBox_inputText.Text;
@@ -31,59 +53,9 @@ namespace VocabularyApp
             MessageBox.Show("Vocabulary " + textBox_inputText.Text + " Saved");
             textBox_inputText.Clear();
             textBox_result.Clear();
-
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            if (!Directory.Exists(Data.pathMainFolder))
-            {
-                Directory.CreateDirectory(Data.pathMainFolder);
 
-                if (!File.Exists(Data.pathAllWords))
-                {
-                    mainList.Add(new Vocabulary(001, "standard", "default", DateTime.Now));
-                    manager.SaveVocabularyList(Data.pathAllWords, mainList);
-                    
-                }
-
-            }
-            mainList = manager.LoadVocabularyList(Data.pathAllWords);
-
-            GenerateTable();
-
-           
-        }
-
-        //Importiert Excel Values in vokabelliste
-        private void Btn_ImportExcel_Click(object sender, EventArgs e)
-        {
-            //GenerateTable();
-            //textHandler.PrintValuesToTextFile(Data.pathAllWords);
-
-            //manager.PrintVoclist(Data.pathAllWords);
-            //manager.ClearList(Data.pathAllWords);
-            textHandler.PrintValuesToTextFile(Data.pathAllWords);
-            GenerateTable();
-           var randomList = query.GetRandomItem(Data.pathAllWords);
-            textHandler.PrintVoclist(randomList);
-           
-
-
-            //OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.InitialDirectory = "C://";
-            //openFileDialog.Filter = "excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-            //string filepath = null;
-            //if (openFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    filepath = openFileDialog.FileName;
-            //}
-
-            //Excel excel = new Excel(filepath, 1);
-            //excel.CreateVoc(1, 1);
-            //excel.Close();
-            //MessageBox.Show("Values from: " + filepath + " are successfully imported!");
-        }
 
 
         //Dient zur Abfrage, Auslagerung offen
@@ -113,9 +85,39 @@ namespace VocabularyApp
             {
                 QueryMainList(Data.pathFailureWords, query, query.isFailureList);
             }
-
         }
 
+        private void Btn_test_Click(object sender, EventArgs e)
+        {
+            //GenerateTable();
+            //manager.ClearList(Data.pathAllWords);
+            textHandler.PrintValuesToTextFile(Data.pathAllWords);
+            textHandler.PrintVoclist(Data.pathRandomWords);
+        }
+
+
+
+        //Todo: Excel
+        private void Btn_ImportExcel_Click(object sender, EventArgs e)
+        {
+            //OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = "C://";
+            //openFileDialog.Filter = "excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+            //string filepath = null;
+            //if (openFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    filepath = openFileDialog.FileName;
+            //}
+
+            //Excel excel = new Excel(filepath, 1);
+            //excel.CreateVoc(1, 1);
+            //excel.Close();
+            //MessageBox.Show("Values from: " + filepath + " are successfully imported!");
+        }
+
+
+
+        //Form Methods
         public void QueryMainList(string path, QueryHandler query, bool isFaillist)
         {
             SetTextResult(query.RetrieveItem(path, query.counter));
@@ -156,7 +158,6 @@ namespace VocabularyApp
 
                 else
                 {
-
                     var faillist = manager.GenerateFaillist(Data.pathAllWords);
                     if (faillist.Count == 0)
                     {
@@ -172,7 +173,6 @@ namespace VocabularyApp
                         return;
                     }
 
-
                     SetTextResult(query.RetrieveItem(Data.pathFailureWords, 0));
 
                     query.isFailureList = true;
@@ -184,6 +184,25 @@ namespace VocabularyApp
                 textBox_inputText.Clear();
                 SetTextResult(query.RetrieveItem(path, query.counter));
             }
+        }
+
+        public void GenerateTable()
+        {
+            var voclist = manager.LoadVocabularyList(Data.pathAllWords);
+            dataGrid_allVocs.DataSource = voclist;
+
+            DataTable table = new DataTable("allVocs");
+            table.Columns.Add("ID", typeof(int));
+            table.Columns.Add("German", typeof(string));
+            table.Columns.Add("English", typeof(string));
+            table.Columns.Add("Last failed", typeof(DateTime));
+            table.Columns.Add("Last success", typeof(DateTime));
+
+            foreach (var item in voclist)
+            {
+                table.Rows.Add(item.id, item.nameGer, item.nameEng, item.lastFailed, item.lastSuccess);
+            }
+            dataGrid_allVocs.DataSource = table;
         }
 
         public void SetTextResult(string value)
@@ -204,25 +223,6 @@ namespace VocabularyApp
         public string GetTextInput()
         {
             return textBox_inputText.Text;
-        }
-
-        public void GenerateTable()
-        {
-            var voclist = manager.LoadVocabularyList(Data.pathAllWords);
-            dataGrid_allVocs.DataSource = voclist;
-
-            DataTable table = new DataTable("allVocs");
-            table.Columns.Add("ID", typeof(int));
-            table.Columns.Add("German", typeof(string));
-            table.Columns.Add("English", typeof(string));
-            table.Columns.Add("Last failed", typeof(DateTime));
-            table.Columns.Add("Last success", typeof(DateTime));
-
-            foreach (var item in voclist)
-            {
-                table.Rows.Add(item.id, item.nameGer, item.nameEng, item.lastFailed, item.lastSuccess);
-            }
-            dataGrid_allVocs.DataSource = table;
         }
     }
 }
