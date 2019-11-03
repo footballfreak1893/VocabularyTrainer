@@ -21,7 +21,7 @@ namespace VocabularyApp
         public DateTime lastSuccess;
         public DateTime defaultTime = new DateTime(2000, 01, 01);
         public bool isupdated = false;
-        
+
 
         public Vocabulary(int id, string nameGer, string nameEng, DateTime createdate)
         {
@@ -45,19 +45,23 @@ namespace VocabularyApp
             }
         }
 
-        public DateTime SetDefaultTime (DateTime time)
+        public DateTime SetDefaultTime(DateTime time)
         {
             time = defaultTime;
             return time;
         }
 
-        
+
     }
 
     [Serializable]
     public class ID
     {
-        
+        public ID()
+        {
+            GenerateID();
+        }
+
         public int number;
 
         public void SaveIDList(string path, List<ID> idList)
@@ -80,38 +84,35 @@ namespace VocabularyApp
             return idList;
         }
 
-        public int GenerateID(ID id)
+        public void GenerateID()
         {
-            List<ID> idList = new List<ID>();
-
-            Random random = new Random();
-            int randomNumber = random.Next(0, 100001);
-
-            if (File.Exists(Data.pathAllWordsID))
+            if (!File.Exists(Data.pathAllWordsID))
             {
-                idList = LoadIDList(Data.pathAllWordsID);
-
-                //Testen, ob duplikatserkennung läuft
-                while (idList.Contains(id))
-                {
-                    randomNumber = random.Next(0, 100001);
-                }
-            }
-
-            else
-            {
-                id.number = 0;
-                idList.Add(id);
+                List<ID> idList = new List<ID>();
+                this.number = 00001;
+                idList.Add(this);
                 SaveIDList(Data.pathAllWordsID, idList);
             }
+            else
+            {
+                List<ID> idList = new List<ID>();
+                idList = LoadIDList(Data.pathAllWordsID);
 
-            id.number = randomNumber;
-            idList.Add(id);
-            SaveIDList(Data.pathAllWordsID, idList);
+                var lastId = idList.Last();
+                var lastIdNumber = lastId.number;
 
-            return id.number;
+                this.number = lastIdNumber+1;
+
+                idList.Add(this);
+                SaveIDList(Data.pathAllWordsID, idList);
+            }
+        }
+
+        public int GetId()
+        {
+            return this.number;
         }
     }
-    
+
 
 }

@@ -20,8 +20,9 @@ namespace VocabularyApp
 
         public void CreateVocabulary(string nameGer, string nameEng, List<Vocabulary> vocabularyList, string path)
         {
-            ID genID = new ID();
-            Vocabulary vocabulary = new Vocabulary(genID.GenerateID(genID), nameGer, nameEng, DateTime.Now);
+            ID id = new ID();
+           
+            Vocabulary vocabulary = new Vocabulary(id.GetId(), nameGer, nameEng, DateTime.Now);
 
             var isDublicate = IsADublicate(vocabulary, vocabularyList);
 
