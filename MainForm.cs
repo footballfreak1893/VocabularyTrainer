@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 using System.Data;
+using System.Linq;
 
 namespace VocabularyApp
 {
@@ -91,8 +92,10 @@ namespace VocabularyApp
         {
             //GenerateTable();
             //manager.ClearList(Data.pathAllWords);
-            textHandler.PrintValuesToTextFile(Data.pathAllWords);
-            textHandler.PrintVoclist(Data.pathRandomWords);
+            //textHandler.PrintValuesToTextFile(Data.pathAllWords);
+            //textHandler.PrintVoclist(Data.pathRandomWords);
+
+            FillComboBox();
         }
 
 
@@ -223,6 +226,41 @@ namespace VocabularyApp
         public string GetTextInput()
         {
             return textBox_inputText.Text;
+        }
+
+        public void FillComboBox()
+        {
+            var vocList = manager.LoadVocabularyList(Data.pathAllWords);
+
+            foreach (var item in vocList)
+            {
+                comboBox1.Items.Add(item.id);
+            }
+        }
+
+        public void GetComboItem()
+        {
+            var itemString = comboBox1.SelectedItem.ToString();
+            //Convert to int
+
+            int comboId = Convert.ToInt32(itemString);
+            var vocList = manager.LoadVocabularyList(Data.pathAllWords);
+
+            //LinQ elemente müssen immer in eine Liste Konvertriert werden
+            var vocElement = vocList.Where(x => x.id == comboId).ToList();
+            var voc = vocElement[0];
+
+
+            MessageBox.Show(voc.nameGer);
+
+            //Siehe Update
+            //Update Methode ausbauen 
+            //z.B Alle Attribute in neuem Form anzeigen und upadten :) Kleine UI übung
+        }
+
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GetComboItem();
         }
     }
 }

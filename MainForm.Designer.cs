@@ -41,6 +41,7 @@
             this.dataGrid_allVocs = new System.Windows.Forms.DataGridView();
             this.txt_test = new System.Windows.Forms.TextBox();
             this.btn_test = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_allVocs)).BeginInit();
             this.SuspendLayout();
             // 
@@ -162,11 +163,21 @@
             this.btn_test.UseVisualStyleBackColor = true;
             this.btn_test.Click += new System.EventHandler(this.Btn_test_Click);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(8, 514);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(178, 21);
+            this.comboBox1.TabIndex = 13;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 800);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.btn_test);
             this.Controls.Add(this.txt_test);
             this.Controls.Add(this.dataGrid_allVocs);
@@ -204,6 +215,7 @@
         public System.Windows.Forms.DataGridView dataGrid_allVocs;
         private System.Windows.Forms.TextBox txt_test;
         private System.Windows.Forms.Button btn_test;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

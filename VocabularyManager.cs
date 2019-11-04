@@ -58,10 +58,17 @@ namespace VocabularyApp
         }
 
         //Offen
-        public void DeleteVocabulary(Vocabulary vocabulary, List<Vocabulary> vocbabularyList, string path)
+        //Testen 
+        public void DeleteVocabulary(Vocabulary vocabulary, List<Vocabulary> vocabularyList, string path)
         {
-            vocbabularyList.Remove(vocabulary);
-            SaveVocabularyList(path, vocbabularyList);
+            var voc = vocabularyList.FirstOrDefault(v => v.id == vocabulary.id);
+            if (voc != null)
+            {
+                voc = vocabulary;
+            }
+
+            vocabularyList.Remove(vocabulary);
+            SaveVocabularyList(path, vocabularyList);
         }
 
         //Save / Read ObjectLists
