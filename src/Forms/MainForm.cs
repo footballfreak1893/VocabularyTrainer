@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Data;
 using System.Linq;
+using VocabularyApp.src.Forms;
 
 namespace VocabularyApp
 {
@@ -96,6 +97,13 @@ namespace VocabularyApp
             //textHandler.PrintVoclist(Data.pathRandomWords);
 
             FillComboBox();
+
+            //Hier weiter
+            var vocList = manager.LoadVocabularyList(Data.pathAllWords);
+            VocabularyDetailForm detailForm = new VocabularyDetailForm();
+            detailForm.Show();
+
+
         }
 
 
