@@ -39,6 +39,7 @@
             this.btn_nextItem = new System.Windows.Forms.Button();
             this.tb_counter = new System.Windows.Forms.TextBox();
             this.lbl_counter = new System.Windows.Forms.Label();
+            this.btn_preItem = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbl_Id
@@ -112,7 +113,7 @@
             // 
             this.btn_nextItem.Location = new System.Drawing.Point(205, 236);
             this.btn_nextItem.Name = "btn_nextItem";
-            this.btn_nextItem.Size = new System.Drawing.Size(75, 23);
+            this.btn_nextItem.Size = new System.Drawing.Size(87, 23);
             this.btn_nextItem.TabIndex = 8;
             this.btn_nextItem.Text = "Next Item";
             this.btn_nextItem.UseVisualStyleBackColor = true;
@@ -134,11 +135,22 @@
             this.lbl_counter.TabIndex = 9;
             this.lbl_counter.Text = "Counter";
             // 
+            // btn_preItem
+            // 
+            this.btn_preItem.Location = new System.Drawing.Point(205, 265);
+            this.btn_preItem.Name = "btn_preItem";
+            this.btn_preItem.Size = new System.Drawing.Size(87, 23);
+            this.btn_preItem.TabIndex = 11;
+            this.btn_preItem.Text = "Previous Item";
+            this.btn_preItem.UseVisualStyleBackColor = true;
+            this.btn_preItem.Click += new System.EventHandler(this.Btn_preItem_Click);
+            // 
             // VocabularyDetailForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 300);
+            this.Controls.Add(this.btn_preItem);
             this.Controls.Add(this.tb_counter);
             this.Controls.Add(this.lbl_counter);
             this.Controls.Add(this.btn_nextItem);
@@ -170,5 +182,6 @@
         private System.Windows.Forms.Button btn_nextItem;
         private System.Windows.Forms.TextBox tb_counter;
         private System.Windows.Forms.Label lbl_counter;
+        private System.Windows.Forms.Button btn_preItem;
     }
 }

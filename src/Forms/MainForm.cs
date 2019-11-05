@@ -32,7 +32,7 @@ namespace VocabularyApp
 
                 if (!File.Exists(Data.pathAllWords))
                 {
-                    mainList.Add(new Vocabulary(001, "standard", "default", DateTime.Now));
+                    mainList.Add(new Vocabulary(0, "standard", "default", DateTime.Now));
                     manager.SaveVocabularyList(Data.pathAllWords, mainList);
                 }
             }

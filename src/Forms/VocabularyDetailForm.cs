@@ -18,29 +18,40 @@ namespace VocabularyApp.src.Forms
         public VocabularyDetailForm()
         {
             InitializeComponent();
+
             this.counter = 0;
-            SetComponents(counter);
+            SetComponents();
+
+            btn_preItem.Visible = false;
             
         }
 
-        public void SetComponents(int counter)
+        public void SetComponents()
         {
+            
+
             if (!CheckIfItemsCompleted())
             {
 
                 var list = manager.LoadVocabularyList(Data.pathAllWords);
 
-                tb_Id.Text = list[counter].id.ToString();
-                tb_eng.Text = list[counter].nameEng;
-                tb_ger.Text = list[counter].nameGer;
-                tb_counter.Text = counter.ToString();
-                this.counter++;
+                
+                tb_Id.Text = list[this.counter].id.ToString();
+                tb_eng.Text = list[this.counter].nameEng;
+                tb_ger.Text = list[this.counter].nameGer;
+                tb_counter.Text = this.counter.ToString();
+                
             }
         }
 
         private void Btn_nextItem_Click(object sender, EventArgs e)
         {
-            SetComponents(counter);
+            this.counter++;
+            SetComponents();
+            if (this.counter >0)
+            {
+                btn_preItem.Visible = true;
+            }
         }
 
         public bool CheckIfItemsCompleted()
@@ -55,6 +66,19 @@ namespace VocabularyApp.src.Forms
 
             return false;
         }
+
+        private void Btn_preItem_Click(object sender, EventArgs e)
+        {
+            this.counter--;
+            SetComponents();
+
+            if (this.counter == 0)
+            {
+                btn_preItem.Visible = false;
+            }
+        }
+
+       
 
         //Back function 
         //Clear function
